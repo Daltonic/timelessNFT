@@ -1,5 +1,5 @@
 
-# Truffle-React Dapp Starter Kit
+# Truffle-Tailwind-React Web3 Starter Kit
 Speedily develope your decentralized application with this starter kit for free!
 
 Follow the steps below to download, install, and run this project.
