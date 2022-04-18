@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { setGlobalState, getGlobalState } from './store'
+import { setGlobalState, getGlobalState, setAlert } from './store'
 import TimelessNFT from './abis/TimelessNFT.json'
 
 const { ethereum } = window
@@ -10,25 +10,25 @@ const connectWallet = async () => {
     const accounts = await ethereum.request({ method: 'eth_requestAccounts' })
     setGlobalState('connectedAccount', accounts[0])
   } catch (error) {
-    console.log(error)
-    throw new Error('No ethereum object.')
+    setAlert(JSON.stringify(error), 'red')
   }
 }
 
-const setTransactions = (availableTransactions) => {
-  const structuredTransactions = availableTransactions
-    .map((tx) => ({
-      id: tx.id,
-      from: tx.from,
-      to: tx.to,
-      metadataURI: tx.metadataURI,
-      cost: parseInt(tx.cost._hex) / 10 ** 18,
-      timestamp: new Date(tx.timestamp.toNumber() * 1000).toLocaleString(),
+const structuredNfts = (nfts) => {
+  const web3 = window.web3
+  return nfts
+    .map((nft) => ({
+      id: nft.id,
+      to: nft.to,
+      from: nft.from,
+      cost: web3.utils.fromWei(nft.cost),
+      title: nft.title,
+      description: nft.description,
+      metadataURI: nft.metadataURI,
+      timestamp: nft.timestamp,
     }))
     .reverse()
-  setGlobalState('transactions', structuredTransactions)
 }
-
 
 const loadWeb3 = async () => {
   try {
@@ -47,10 +47,13 @@ const loadWeb3 = async () => {
     const networkData = TimelessNFT.networks[networkId]
 
     if (networkData) {
-      const contract = new web3.eth.Contract(TimelessNFT.abi, networkData.address)
-      // const nfts = await contract.methods.getAllNFTs().call()
+      const contract = new web3.eth.Contract(
+        TimelessNFT.abi,
+        networkData.address
+      )
+      const nfts = await contract.methods.getAllNFTs().call()
 
-      // setGlobalState('nfts', structuredNfts(nfts))
+      setGlobalState('nfts', structuredNfts(nfts))
       setGlobalState('contract', contract)
     } else {
       window.alert('TimelessNFT contract not deployed to detected network.')
@@ -60,19 +63,19 @@ const loadWeb3 = async () => {
   }
 }
 
-const mintNFT = async (nft) => {
+const mintNFT = async ({ title, description, metadataURI, price }) => {
   try {
-    nft.price = window.web3.utils.toWei(Number(nft.price).toString(), 'ether')
+    price = window.web3.utils.toWei(price.toString())
     const contract = getGlobalState('contract')
     const account = getGlobalState('connectedAccount')
 
     await contract.methods
-      .payToMint(nft.title, nft.description, nft.metadataURI)
-      .send({ from: account, value: nft.price })
+      .payToMint(title, description, metadataURI)
+      .send({ from: account, value: price })
 
-    return true;
+    return true
   } catch (error) {
-    alert(`Encountered: ${JSON.stringify(error)} while...`)
+    setAlert(error.message, 'red')
   }
 }
 
@@ -83,17 +86,11 @@ const getTotalMinted = async () => {
   return count
 }
 
-const getMintedNFTS = async () => {
+const getAllNFTs = async () => {
   const contract = getGlobalState('contract')
-  const nfts = await contract.methods.getMintedNFTs().call()
+  const nfts = await contract.methods.getAllNFTs().call()
   console.log(nfts)
-  return nfts
+  // return nfts
 }
 
-export {
-  loadWeb3,
-  connectWallet,
-  mintNFT,
-  getTotalMinted,
-  getMintedNFTS,
-}
+export { loadWeb3, connectWallet, mintNFT, getTotalMinted, getAllNFTs }

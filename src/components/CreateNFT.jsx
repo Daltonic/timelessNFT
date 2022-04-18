@@ -1,4 +1,9 @@
-import { useGlobalState, setGlobalState } from '../store'
+import {
+  useGlobalState,
+  setGlobalState,
+  setLoadingMsg,
+  setAlert,
+} from '../store'
 import { mintNFT } from '../TimelessNFT'
 import { useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
@@ -8,13 +13,11 @@ const client = create('https://ipfs.infura.io:5001/api/v0')
 
 const CreateNFT = () => {
   const [modal] = useGlobalState('modal')
-  const [connectedAccount] = useGlobalState('connectedAccount')
   const [title, setTitle] = useState('')
   const [price, setPrice] = useState('')
   const [description, setDescription] = useState('')
   const [fileUrl, setFileUrl] = useState('')
   const [imgBase64, setImgBase64] = useState(null)
-  const [uploading, setUploading] = useState(false)
 
   const onChange = async (e) => {
     const reader = new FileReader()
@@ -23,35 +26,35 @@ const CreateNFT = () => {
     reader.onload = (readerEvent) => {
       const file = readerEvent.target.result
       setImgBase64(file)
+      setFileUrl(e.target.files[0])
     }
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!title || !price || !description) return
-    
-    setUploading(true)
+
     setGlobalState('modal', 'scale-0')
-    setGlobalState('mintModal', 'scale-100')
+    setGlobalState('loading', { show: true, msg: 'Uploading IPFS data...' })
 
     try {
-      const created = await client.add(imgBase64)
+      const created = await client.add(fileUrl)
       const metadataURI = `https://ipfs.infura.io/ipfs/${created.path}`
       const nft = { title, price, description, metadataURI }
+      setLoadingMsg('Intializing transaction...')
 
       mintNFT(nft).then((res) => {
-        if(res) {
+        if (res) {
           console.log(metadataURI)
           setFileUrl(metadataURI)
           resetForm()
-          setUploading(false)
-          setGlobalState('mintModal', 'scale-0')
+          setAlert('Minting completed...', 'green')
+          window.location.reload()
         }
       })
     } catch (error) {
-      setUploading(false)
       console.log('Error uploading file: ', error)
-      setGlobalState('mintModal', 'scale-0')
+      setAlert('Minting failed...', 'red')
     }
   }
 
@@ -67,11 +70,6 @@ const CreateNFT = () => {
     setPrice('')
     setDescription('')
   }
-
-  const getNFT = async (url) =>
-    await fetch(url)
-      .then((r) => r.json())
-      .then((t) => t)
 
   return (
     <div
@@ -144,7 +142,8 @@ const CreateNFT = () => {
               text-slate-500 bg-transparent border-0
               focus:outline-none focus:ring-0"
               type="number"
-              step={0.0001}
+              step={0.01}
+              min={0.01}
               name="price"
               placeholder="Price (Eth)"
               onChange={(e) => setPrice(e.target.value)}
@@ -170,7 +169,6 @@ const CreateNFT = () => {
           <button
             type="submit"
             onClick={handleSubmit}
-            disabled={uploading}
             className="flex flex-row justify-center items-center
             w-full text-white text-md bg-[#e32970]
             hover:bg-[#bd255f] py-2 px-5 rounded-full
@@ -179,7 +177,7 @@ const CreateNFT = () => {
             hover:border hover:border-[#bd255f]
             focus:outline-none focus:ring mt-5"
           >
-            {uploading ? 'Uploading...' : 'Mint Now'}
+            Mint Now
           </button>
         </form>
       </div>

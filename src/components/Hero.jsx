@@ -1,5 +1,5 @@
-import { setGlobalState } from '../store'
-import { useGlobalState } from '../store'
+import { setGlobalState, useGlobalState, truncate } from '../store'
+import Identicon from 'react-identicons'
 
 const Hero = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
@@ -12,8 +12,8 @@ const Hero = () => {
       <div className="md:w-3/6 w-full">
         <div>
           <h1 className="text-white text-5xl font-bold">
-            Buy and sell <br /> digital Arts, <br />
-            <span className="text-gradient">NFTs</span> collections
+            Buy and Sell <br /> Digital Arts, <br />
+            <span className="text-gradient">NFTs</span> Collections
           </h1>
           <p className="text-gray-500 font-semibold text-sm mt-3">
             Mint and collect the hottest NFTs around.
@@ -30,6 +30,13 @@ const Hero = () => {
                 rounded-full cursor-pointer p-2"
               >
                 Create NFT
+              </button>
+              <button
+                className="text-white border border-gray-500 
+              hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
+                rounded-full p-2 mx-3"
+              >
+                List NFTs
               </button>
             </>
           ) : (
@@ -63,14 +70,16 @@ const Hero = () => {
           className="h-60 w-full object-cover"
         />
         <div className="flex justify-start items-center p-3">
-          <img
-            src="https://pixinvent.com/materialize-material-design-admin-template/app-assets/images/user/12.jpg"
-            alt="Owner Image"
+          <Identicon
+            string={connectedAccount ? connectedAccount : 'Connect Your Wallet'}
+            size={50}
             className="h-10 w-10 object-contain rounded-full mr-3"
           />
           <div>
-            <p className="text-white font-semibold">Moon light painting</p>
-            <small className="text-pink-800 font-semibold">@deborah</small>
+            <p className="text-white font-semibold">
+              {connectedAccount ? truncate(connectedAccount, 4, 4, 11) : 'Connect Your Wallet'}
+            </p>
+            <small className="text-pink-800 font-bold">@you</small>
           </div>
         </div>
       </div>

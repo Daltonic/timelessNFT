@@ -1,19 +1,17 @@
-import { useEffect } from 'react'
 import Alert from './components/Alert'
 import Artworks from './components/Artworks'
 import CreateNFT from './components/CreateNFT'
 import Footer from './components/Footer'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import MintNFT from './components/MintNFT'
+import Loading from './components/Loading'
 import ShowNFT from './components/ShowNFT'
 import Transactions from './components/Transactions'
 import { loadWeb3 } from './TimelessNFT'
+import { useEffect } from 'react'
 
 const App = () => {
-  useEffect(() => {
-    loadWeb3()
-  }, [])
+  useEffect(() => loadWeb3(), [])
 
   return (
     <div className="min-h-screen">
@@ -23,11 +21,11 @@ const App = () => {
       </div>
       <Artworks />
       <Transactions />
-      <Footer />
       <CreateNFT />
-      <MintNFT />
-      <Alert />
       <ShowNFT />
+      <Footer />
+      <Alert />
+      <Loading />
     </div>
   )
 }

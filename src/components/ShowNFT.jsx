@@ -1,5 +1,6 @@
-import { useGlobalState, setGlobalState } from '../store'
+import { useGlobalState, setGlobalState, truncate } from '../store'
 import { FaTimes } from 'react-icons/fa'
+import Identicon from 'react-identicons'
 
 const ShowNFT = () => {
   const [showModal] = useGlobalState('showModal')
@@ -28,7 +29,7 @@ const ShowNFT = () => {
             <div className="shrink-0 rounded-xl overflow-hidden h-40 w-40">
               <img
                 className="h-full w-full object-cover cursor-pointer"
-                src={nft?.imgUrl}
+                src={nft?.metadataURI}
                 alt={nft?.title}
               />
             </div>
@@ -36,28 +37,31 @@ const ShowNFT = () => {
 
           <div className="flex flex-col justify-start rounded-xl mt-5">
             <h4 className="text-white font-semibold">{nft?.title}</h4>
-            <p className="text-gray-400 text-xs my-1">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Architecto rem sapiente neque voluptate dignissimos magni, fugiat
-              maiores sequi saepe similique adipisci quae dolorum error quas
-              velit omnis suscipit assumenda officia.
-            </p>
+            <p className="text-gray-400 text-xs my-1">{nft?.description}</p>
 
             <div className="flex justify-between items-center mt-3 text-white">
               <div className="flex justify-start items-center">
-                <img
+                {/* <img
                   src={nft?.avatar}
                   alt={nft?.username}
                   className="h-10 w-10 object-contain rounded-full mr-3"
+                /> */}
+                <Identicon
+                  string={nft?.to}
+                  size={50}
+                  className="h-10 w-10 object-contain rounded-full mr-3"
                 />
-                <small className="text-pink-800 font-semibold">
-                  @{nft?.username}
-                </small>
+                <div className="flex flex-col justify-center items-start">
+                  <small className="text-white font-bold">@owner</small>
+                  <small className="text-pink-800 font-semibold">
+                    {nft?.to ? truncate(nft.to, 4, 4, 11) : '...'}
+                  </small>
+                </div>
               </div>
 
               <div className="flex flex-col">
                 <small className="text-xs">Current Price</small>
-                <p className="text-sm font-semibold">2.34 ETH</p>
+                <p className="text-sm font-semibold">{nft?.cost} ETH</p>
               </div>
             </div>
           </div>

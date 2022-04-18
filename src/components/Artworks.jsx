@@ -1,11 +1,7 @@
-import { useEffect } from 'react'
-import { nfts } from '../utils/dummy'
 import { setGlobalState, useGlobalState } from '../store'
 
 const Artworks = () => {
-  const [totalMinted] = useGlobalState('totalMinted')
-
-  useEffect(() => console.log(totalMinted), [])
+  const [nfts] = useGlobalState('nfts')
 
   const truncate = (str, num = 50) => {
     if (str.length > num) {
@@ -34,24 +30,18 @@ const Artworks = () => {
               className="w-full shadow-xl shadow-black rounded-md overflow-hidden bg-gray-800 my-2 p-3"
             >
               <img
-                src={nft.imgUrl}
+                src={nft.metadataURI}
                 alt={truncate(nft.title, 6)}
                 className="h-60 w-full object-cover shadow-lg shadow-black rounded-lg mb-3"
               />
               <h4 className="text-white font-semibold">{nft.title}</h4>
               <p className="text-gray-400 text-xs my-1">
-                {truncate(
-                  `Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Architecto rem sapiente neque voluptate dignissimos magni,
-                fugiat maiores sequi saepe similique adipisci quae dolorum error
-                quas velit omnis suscipit assumenda officia.`,
-                  150
-                )}
+                {truncate(nft.description)}
               </p>
               <div className="flex justify-between items-center mt-3 text-white">
                 <div className="flex flex-col">
                   <small className="text-xs">Current Price</small>
-                  <p className="text-sm font-semibold">2.34 ETH</p>
+                  <p className="text-sm font-semibold">{nft.cost} ETH</p>
                 </div>
 
                 <button
