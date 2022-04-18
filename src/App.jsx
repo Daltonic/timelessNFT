@@ -8,12 +8,11 @@ import Hero from './components/Hero'
 import MintNFT from './components/MintNFT'
 import ShowNFT from './components/ShowNFT'
 import Transactions from './components/Transactions'
-import { loadBlockchainData, loadWeb3, getMintedNFTS } from './TimelessNFT'
+import { loadWeb3 } from './TimelessNFT'
 
 const App = () => {
   useEffect(() => {
     loadWeb3()
-    loadBlockchainData().then(() => getMintedNFTS())
   }, [])
 
   return (

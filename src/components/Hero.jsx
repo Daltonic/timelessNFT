@@ -1,5 +1,4 @@
 import { setGlobalState } from '../store'
-import { mintNFT } from '../TimelessNFT'
 import { useGlobalState } from '../store'
 
 const Hero = () => {
@@ -30,16 +29,7 @@ const Hero = () => {
               bg-[#e32970] hover:bg-[#bd255f]
                 rounded-full cursor-pointer p-2"
               >
-                Create Now
-              </button>
-
-              <button
-                onClick={() => setGlobalState('mintModal', 'scale-100')}
-                className="text-white border border-gray-500 
-              hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
-                rounded-full p-2 mx-3"
-              >
-                Mint NFT
+                Create NFT
               </button>
             </>
           ) : (

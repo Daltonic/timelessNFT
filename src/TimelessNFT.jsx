@@ -1,21 +1,8 @@
 import Web3 from 'web3'
-import { setGlobalState } from './store'
+import { setGlobalState, getGlobalState } from './store'
 import TimelessNFT from './abis/TimelessNFT.json'
 
 const { ethereum } = window
-
-const getContract = async () => {
-  const web3 = window.web3
-  const networkId = await web3.eth.net.getId()
-  const networkData = TimelessNFT.networks[networkId]
-
-  if (networkData) {
-    const contract = new web3.eth.Contract(TimelessNFT.abi, networkData.address)
-    return contract
-  } else {
-    window.alert('timelessNFT contract not deployed to detected network.')
-  }
-}
 
 const connectWallet = async () => {
   try {
@@ -42,50 +29,62 @@ const setTransactions = (availableTransactions) => {
   setGlobalState('transactions', structuredTransactions)
 }
 
-const loadBlockchainData = async () => {
-  const web3 = window.web3
-  const networkId = await web3.eth.net.getId()
-  const networkData = TimelessNFT.networks[networkId]
 
-  if (networkData) {
+const loadWeb3 = async () => {
+  try {
+    if (!ethereum) return alert('Please install Metamask')
+
+    window.web3 = new Web3(ethereum)
+    await ethereum.enable()
+
+    window.web3 = new Web3(window.web3.currentProvider)
+
+    const web3 = window.web3
     const accounts = await web3.eth.getAccounts()
     setGlobalState('connectedAccount', accounts[0])
-    // Load Contract
-    const contract = new web3.eth.Contract(TimelessNFT.abi, networkData.address)
-    setGlobalState('contract', contract)
-  } else {
-    window.alert('timelessNFT contract not deployed to detected network.')
+
+    const networkId = await web3.eth.net.getId()
+    const networkData = TimelessNFT.networks[networkId]
+
+    if (networkData) {
+      const contract = new web3.eth.Contract(TimelessNFT.abi, networkData.address)
+      // const nfts = await contract.methods.getAllNFTs().call()
+
+      // setGlobalState('nfts', structuredNfts(nfts))
+      setGlobalState('contract', contract)
+    } else {
+      window.alert('TimelessNFT contract not deployed to detected network.')
+    }
+  } catch (error) {
+    alert('Please connect your metamask wallet!')
   }
 }
 
-const loadWeb3 = async () => {
-  if (!ethereum) return alert('Please install Metamask')
-
-  window.web3 = new Web3(ethereum)
-  await ethereum.enable()
-
-  window.web3 = new Web3(window.web3.currentProvider)
-}
-
 const mintNFT = async (nft) => {
-  window.web3 = new Web3(ethereum)
-  nft.price = window.web3.utils.toWei(Number(nft.price).toString(), 'ether')
-  const contract = await getContract()
+  try {
+    nft.price = window.web3.utils.toWei(Number(nft.price).toString(), 'ether')
+    const contract = getGlobalState('contract')
+    const account = getGlobalState('connectedAccount')
 
-  contract.methods
-    .payToMint(nft.from, nft.image)
-    .send({ from: nft.from, value: nft.price })
+    await contract.methods
+      .payToMint(nft.title, nft.description, nft.metadataURI)
+      .send({ from: account, value: nft.price })
+
+    return true;
+  } catch (error) {
+    alert(`Encountered: ${JSON.stringify(error)} while...`)
+  }
 }
 
 const getTotalMinted = async () => {
-  const contract = await getContract()
+  const contract = getGlobalState('contract')
   const count = await contract.methods.count().call()
   console.log(count)
   return count
 }
 
 const getMintedNFTS = async () => {
-  const contract = await getContract()
+  const contract = getGlobalState('contract')
   const nfts = await contract.methods.getMintedNFTs().call()
   console.log(nfts)
   return nfts
@@ -93,7 +92,6 @@ const getMintedNFTS = async () => {
 
 export {
   loadWeb3,
-  loadBlockchainData,
   connectWallet,
   mintNFT,
   getTotalMinted,

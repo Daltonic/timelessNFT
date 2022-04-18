@@ -29,22 +29,29 @@ const CreateNFT = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!title || !price || !description) return
-    const nft = { from: connectedAccount, title, price, description }
     
     setUploading(true)
+    setGlobalState('modal', 'scale-0')
+    setGlobalState('mintModal', 'scale-100')
+
     try {
       const created = await client.add(imgBase64)
-      const url = `https://ipfs.infura.io/ipfs/${created.path}`
-      nft.image = url
-      mintNFT(nft).then(() => {
-        console.log(url)
-        setFileUrl(url)
-        resetForm()
+      const metadataURI = `https://ipfs.infura.io/ipfs/${created.path}`
+      const nft = { title, price, description, metadataURI }
+
+      mintNFT(nft).then((res) => {
+        if(res) {
+          console.log(metadataURI)
+          setFileUrl(metadataURI)
+          resetForm()
+          setUploading(false)
+          setGlobalState('mintModal', 'scale-0')
+        }
       })
-      setUploading(false)
     } catch (error) {
       setUploading(false)
       console.log('Error uploading file: ', error)
+      setGlobalState('mintModal', 'scale-0')
     }
   }
 

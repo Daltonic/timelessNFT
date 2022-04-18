@@ -1,6 +1,6 @@
 import { createGlobalState } from 'react-hooks-global-state'
 
-const { setGlobalState, useGlobalState } = createGlobalState({
+const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   modal: '',
   mintModal: '',
   alertModal: '',
@@ -13,4 +13,4 @@ const { setGlobalState, useGlobalState } = createGlobalState({
   totalMinted: 0,
 })
 
-export { useGlobalState, setGlobalState }
+export { useGlobalState, setGlobalState, getGlobalState }

@@ -9,11 +9,11 @@ contract TimelessNFT is ERC721Enumerable, Ownable {
     using Strings for uint256;
 
     mapping(string => uint8) existingURIs;
-    uint256 private maxSupply = 114;
-    address public deployer;
+    uint256 public maxSupply = 100;
     address public artist;
     uint256 public royalityFee;
-    uint256 private supply;
+    uint256 public supply;
+    uint256 public cost = 0.01 ether;
 
     event Sale(
         uint256 id,
@@ -29,6 +29,8 @@ contract TimelessNFT is ERC721Enumerable, Ownable {
         address from;
         address to;
         uint256 cost;
+        string title;
+        string description;
         string metadataURI;
         uint256 timestamp;
     }
@@ -40,11 +42,9 @@ contract TimelessNFT is ERC721Enumerable, Ownable {
         string memory _name,
         string memory _symbol,
         uint256 _royalityFee,
-        address _deployer,
         address _artist
     ) ERC721(_name, _symbol) {
         royalityFee = _royalityFee;
-        deployer = _deployer;
         artist = _artist;
         supply = totalSupply();
     }
@@ -53,42 +53,47 @@ contract TimelessNFT is ERC721Enumerable, Ownable {
         return existingURIs[uri] == 1;
     }
 
-    function payToMint(address to, string memory metadataURI) public payable {
+    function payToMint(
+        string memory title,
+        string memory description,
+        string memory metadataURI
+    ) public payable {
         require(supply <= maxSupply, "Sorry, all NFTs have been minted!");
-        require(msg.value > 0 ether, "Ether too low for minting!");
-        require(existingURIs[metadataURI] != 1, "This NFT is already minted!");
+        require(msg.value >= cost, "Ether too low for minting!");
+        require(existingURIs[metadataURI] == 0, "This NFT is already minted!");
+        require(msg.sender != owner(), "Sales not allowed!");
 
-        if (to != owner()) {
-            supply += 1;
-            existingURIs[metadataURI] = 1;
+        supply += 1;
+        existingURIs[metadataURI] = 1;
 
-            uint256 royality = (msg.value * royalityFee) / 100;
+        uint256 royality = (msg.value * royalityFee) / 100;
 
-            _payRoyality(artist, royality);
-            _payRoyality(deployer, (msg.value - royality));
+        payTo(artist, royality);
+        payTo(owner(), (msg.value - royality));
 
-            minted.push(
-                TransactionStruct(
-                    supply,
-                    owner(),
-                    to,
-                    msg.value,
-                    metadataURI,
-                    block.timestamp
-                )
-            );
-
-            _performSales(
+        minted.push(
+            TransactionStruct(
                 supply,
                 owner(),
-                to,
+                msg.sender,
                 msg.value,
+                title,
+                description,
                 metadataURI,
                 block.timestamp
-            );
-        }
+            )
+        );
 
-        _safeMint(to, supply);
+        emit Sale(
+            supply,
+            owner(),
+            msg.sender,
+            msg.value,
+            metadataURI,
+            block.timestamp
+        );
+
+        _safeMint(msg.sender, supply);
     }
 
     function transferFrom(
@@ -100,58 +105,47 @@ contract TimelessNFT is ERC721Enumerable, Ownable {
             _isApprovedOrOwner(_msgSender(), tokenId),
             "ERC721: transfer caller is not owner nor approved"
         );
+        // require(msg.value >= cost, "Ether too low for minting!");
 
-        if (msg.value > 0) {
-            uint256 royality = (msg.value * royalityFee) / 100;
-            _payRoyality(artist, royality);
-            _payRoyality(from, (msg.value - royality));
+        uint256 royality = (msg.value * royalityFee) / 100;
+        payTo(artist, royality);
+        payTo(from, (msg.value - royality));
 
-            _performSales(
+        transactions.push(
+            TransactionStruct(
                 tokenId,
                 from,
                 to,
                 msg.value,
-                "Transfered ownership",
+                minted[tokenId].title,
+                minted[tokenId].description,
+                minted[tokenId].metadataURI,
                 block.timestamp
-            );
-        }
+            )
+        );
+
+        emit Sale(
+            tokenId,
+            from,
+            to,
+            msg.value,
+            minted[tokenId].metadataURI,
+            block.timestamp
+        );
 
         _transfer(from, to, tokenId);
     }
 
-    function getTransactions()
-        public
-        view
-        returns (TransactionStruct[] memory)
-    {
-        return transactions;
-    }
-
-    function getMintedNFTs() public view returns (TransactionStruct[] memory) {
-        return minted;
-    }
-
-    function _performSales(
-        uint256 id,
-        address from,
-        address to,
-        uint256 cost,
-        string memory metadataURI,
-        uint256 timestamp
-    ) internal {
-        transactions.push(
-            TransactionStruct(id, from, to, cost, metadataURI, timestamp)
-        );
-
-        emit Sale(id, from, to, cost, metadataURI, timestamp);
-    }
-
-    function _payRoyality(address stakeholder, uint256 _royalityFee) internal {
-        (bool success1, ) = payable(stakeholder).call{value: _royalityFee}("");
+    function payTo(address to, uint256 amount) internal {
+        (bool success1, ) = payable(to).call{value: amount}("");
         require(success1);
     }
 
-    function count() public view returns (uint256) {
-        return supply;
+    function getAllNFTs() public view returns (TransactionStruct[] memory) {
+        return minted;
+    }
+
+    function getAllTransactions() public view returns (TransactionStruct[] memory) {
+        return transactions;
     }
 }
