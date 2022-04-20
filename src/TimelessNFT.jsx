@@ -52,8 +52,10 @@ const loadWeb3 = async () => {
         networkData.address
       )
       const nfts = await contract.methods.getAllNFTs().call()
+      const transactions = await contract.methods.getAllTransactions().call()
 
       setGlobalState('nfts', structuredNfts(nfts))
+      setGlobalState('transactions', transactions)
       setGlobalState('contract', contract)
     } else {
       window.alert('TimelessNFT contract not deployed to detected network.')

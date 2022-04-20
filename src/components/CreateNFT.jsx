@@ -59,7 +59,7 @@ const CreateNFT = () => {
   }
 
   const closeModal = () => {
-    setGlobalState('modal', '')
+    setGlobalState('modal', 'scale-0')
     resetForm()
   }
 
@@ -74,7 +74,7 @@ const CreateNFT = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-screen h-screen flex items-center
-      justify-center bg-black bg-opacity-50 transform scale-0
+      justify-center bg-black bg-opacity-50 transform
       transition-transform duration-300 ${modal}`}
     >
       <div className="bg-[#151c25] shadow-xl shadow-[#e32970] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
@@ -108,7 +108,7 @@ const CreateNFT = () => {
               <span className="sr-only">Choose profile photo</span>
               <input
                 type="file"
-                accept="image/png, image/gif, image/jpeg"
+                accept="image/png, image/gif, image/jpeg, image/webp"
                 className="block w-full text-sm text-slate-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-full file:border-0

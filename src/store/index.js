@@ -1,11 +1,11 @@
 import { createGlobalState } from 'react-hooks-global-state'
 
 const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
-  modal: '',
+  modal: 'scale-0',
   mintModal: '',
   alert: { show: false, msg: '', color: '' },
   loading: { show: false, msg: '' },
-  showModal: '',
+  showModal: 'scale-0',
   connectedAccount: '',
   nft: null,
   nfts: [],

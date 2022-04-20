@@ -6,9 +6,7 @@ import { useGlobalState } from '../store'
 const Transactions = () => {
   const [transactions] = useGlobalState('transactions')
 
-  const getTransactions = () => console.log(transactions)
-
-  useEffect(() => getTransactions(), [])
+  useEffect(() => console.log(transactions, 'transactions'), [])
 
   return (
     <div className="bg-[#151c25]">
@@ -52,7 +50,6 @@ const Transactions = () => {
             className="shadow-xl shadow-black text-white
             bg-[#e32970] hover:bg-[#bd255f]
             rounded-full cursor-pointer p-2"
-            onClick={getTransactions}
           >
             Load More
           </button>
