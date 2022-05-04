@@ -1,15 +1,7 @@
-import { setGlobalState, useGlobalState } from '../store'
+import { setGlobalState, useGlobalState, truncate } from '../store'
 
 const Artworks = () => {
   const [nfts] = useGlobalState('nfts')
-
-  const truncate = (str, num = 50) => {
-    if (str.length > num) {
-      return str.slice(0, num) + '...'
-    } else {
-      return str
-    }
-  }
 
   const setNFT = (nft) => {
     setGlobalState('nft', nft)
@@ -24,9 +16,9 @@ const Artworks = () => {
         </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-4 lg:gap-3 py-2.5">
-          {nfts.map((nft, i) => (
+          {nfts.map((nft) => (
             <div
-              key={i}
+              key={nft.id}
               className="w-full shadow-xl shadow-black rounded-md overflow-hidden bg-gray-800 my-2 p-3"
             >
               <img

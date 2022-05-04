@@ -9,11 +9,12 @@ module.exports = async (callback) => {
   const timelessNFT = await TimelessNFT.deployed()
 
   const METADATAURI =
-    'https://bafybeidfpvjszubegtoomoknmc7zcqnay7noteadbwxktw46guhdeqohrm.ipfs.infura-ipfs.io/2.json'
+    'https://bafybeidfpvjszubegtoomoknmc7zcqnay7noteadbwxktw46guhdeqohrm.ipfs.infura-ipfs.io/3.json'
 
   const TITLE = 'Soul McCullough'
   const DESCRIPTION =
     'engineer efficient solutions with this NFT, created for Public-key'
+  const SALESPRICE =  web3.utils.toWei('3', 'ether')
 
   let deployerBal = await web3.eth.getBalance(deployer)
   let artistBal = await web3.eth.getBalance(artist)
@@ -27,7 +28,7 @@ module.exports = async (callback) => {
 
   console.log(`Minting NFT for buyer1...\n`)
 
-  await timelessNFT.payToMint(TITLE, DESCRIPTION, METADATAURI, {
+  await timelessNFT.payToMint(TITLE, DESCRIPTION, METADATAURI, SALESPRICE, {
     from: buyer1,
     value: COST,
   })
@@ -47,7 +48,7 @@ module.exports = async (callback) => {
   console.log(`Performing transfer sale to buyer2...\n`)
 
   await timelessNFT.approve(buyer2, 1, { from: buyer1 })
-  await timelessNFT.transferFrom(buyer1, buyer2, 1, { from: buyer2, value: COST })
+  await timelessNFT.transferFrom(buyer1, buyer2, 1, { from: buyer2, value: SALESPRICE })
 
   console.log(`Transfer complete!\n`)
 

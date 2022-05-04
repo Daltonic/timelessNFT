@@ -15,13 +15,11 @@ const connectWallet = async () => {
 }
 
 const structuredNfts = (nfts) => {
-  const web3 = window.web3
   return nfts
     .map((nft) => ({
-      id: nft.id,
-      to: nft.to,
-      from: nft.from,
-      cost: web3.utils.fromWei(nft.cost),
+      id: Number(nft.id),
+      owner: nft.owner,
+      cost: window.web3.utils.fromWei(nft.cost),
       title: nft.title,
       description: nft.description,
       metadataURI: nft.metadataURI,
@@ -35,7 +33,6 @@ const loadWeb3 = async () => {
     if (!ethereum) return alert('Please install Metamask')
 
     window.web3 = new Web3(ethereum)
-    await ethereum.enable()
 
     window.web3 = new Web3(window.web3.currentProvider)
 
@@ -55,7 +52,7 @@ const loadWeb3 = async () => {
       const transactions = await contract.methods.getAllTransactions().call()
 
       setGlobalState('nfts', structuredNfts(nfts))
-      setGlobalState('transactions', transactions)
+      setGlobalState('transactions', structuredNfts(transactions))
       setGlobalState('contract', contract)
     } else {
       window.alert('TimelessNFT contract not deployed to detected network.')
@@ -67,13 +64,14 @@ const loadWeb3 = async () => {
 
 const mintNFT = async ({ title, description, metadataURI, price }) => {
   try {
-    price = window.web3.utils.toWei(price.toString())
+    price = window.web3.utils.toWei(price.toString(), 'ether')
     const contract = getGlobalState('contract')
     const account = getGlobalState('connectedAccount')
+    const mintPrice = window.web3.utils.toWei('0.01', 'ether')
 
     await contract.methods
-      .payToMint(title, description, metadataURI)
-      .send({ from: account, value: price })
+      .payToMint(title, description, metadataURI, price)
+      .send({ from: account, value: mintPrice })
 
     return true
   } catch (error) {
@@ -81,18 +79,18 @@ const mintNFT = async ({ title, description, metadataURI, price }) => {
   }
 }
 
-const getTotalMinted = async () => {
-  const contract = getGlobalState('contract')
-  const count = await contract.methods.count().call()
-  console.log(count)
-  return count
+const buyNFT = async ({ id, cost }) => {
+  try {
+    cost = window.web3.utils.toWei(cost.toString(), 'ether')
+    const contract = getGlobalState('contract')
+    const buyer = getGlobalState('connectedAccount')
+
+    await contract.methods.payToBuy(Number(id)).send({ from: buyer, value: cost })
+
+    return true
+  } catch (error) {
+    setAlert(error.message, 'red')
+  }
 }
 
-const getAllNFTs = async () => {
-  const contract = getGlobalState('contract')
-  const nfts = await contract.methods.getAllNFTs().call()
-  console.log(nfts)
-  // return nfts
-}
-
-export { loadWeb3, connectWallet, mintNFT, getTotalMinted, getAllNFTs }
+export { loadWeb3, connectWallet, mintNFT, buyNFT }

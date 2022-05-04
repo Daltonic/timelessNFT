@@ -45,7 +45,6 @@ const CreateNFT = () => {
 
       mintNFT(nft).then((res) => {
         if (res) {
-          console.log(metadataURI)
           setFileUrl(metadataURI)
           resetForm()
           setAlert('Minting completed...', 'green')

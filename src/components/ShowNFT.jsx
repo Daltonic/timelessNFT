@@ -1,10 +1,32 @@
-import { useGlobalState, setGlobalState, truncate } from '../store'
+import { useGlobalState, setGlobalState, truncate, setAlert } from '../store'
 import { FaTimes } from 'react-icons/fa'
 import Identicon from 'react-identicons'
+import { buyNFT } from '../TimelessNFT'
 
 const ShowNFT = () => {
   const [showModal] = useGlobalState('showModal')
+  const [connectedAccount] = useGlobalState('connectedAccount')
   const [nft] = useGlobalState('nft')
+
+  const handleNFTPurchase = () => {
+    setGlobalState('showModal', 'scale-0')
+    setGlobalState('loading', {
+      show: true,
+      msg: 'Initializing NFT transfer...',
+    })
+
+    try {
+      buyNFT(nft).then((res) => {
+        if (res) {
+          setAlert('Transfer completed...', 'green')
+          window.location.reload()
+        }
+      })
+    } catch (error) {
+      console.log('Error transfering NFT: ', error)
+      setAlert('Purchase failed...', 'red')
+    }
+  }
 
   return (
     <div
@@ -13,7 +35,7 @@ const ShowNFT = () => {
       transition-transform duration-300 ${showModal}`}
     >
       <div className="bg-[#151c25] shadow-xl shadow-[#e32970] rounded-xl w-11/12 md:w-2/5 h-7/12 p-6">
-        <form className="flex flex-col">
+        <div className="flex flex-col">
           <div className="flex flex-row justify-between items-center">
             <p className="font-semibold text-gray-400">Buy NFT</p>
             <button
@@ -41,20 +63,15 @@ const ShowNFT = () => {
 
             <div className="flex justify-between items-center mt-3 text-white">
               <div className="flex justify-start items-center">
-                {/* <img
-                  src={nft?.avatar}
-                  alt={nft?.username}
-                  className="h-10 w-10 object-contain rounded-full mr-3"
-                /> */}
                 <Identicon
-                  string={nft?.to}
+                  string={nft?.owner}
                   size={50}
                   className="h-10 w-10 object-contain rounded-full mr-3"
                 />
                 <div className="flex flex-col justify-center items-start">
                   <small className="text-white font-bold">@owner</small>
                   <small className="text-pink-800 font-semibold">
-                    {nft?.to ? truncate(nft.to, 4, 4, 11) : '...'}
+                    {nft?.owner ? truncate(nft.owner, 4, 4, 11) : '...'}
                   </small>
                 </div>
               </div>
@@ -65,20 +82,22 @@ const ShowNFT = () => {
               </div>
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="flex flex-row justify-center items-center
+          {connectedAccount != nft?.owner ? (
+            <button
+              type="submit"
+              className="flex flex-row justify-center items-center
             w-full text-white text-md bg-[#e32970]
             hover:bg-[#bd255f] py-2 px-5 rounded-full
             drop-shadow-xl border border-transparent
             hover:bg-transparent hover:text-[#e32970]
             hover:border hover:border-[#bd255f]
             focus:outline-none focus:ring mt-5"
-          >
-            Purchase Now
-          </button>
-        </form>
+              onClick={handleNFTPurchase}
+            >
+              Purchase Now
+            </button>
+          ) : null}
+        </div>
       </div>
     </div>
   )

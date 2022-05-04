@@ -12,13 +12,13 @@ contract('TimelessNFT', ([_deployer, _artist, buyer1, buyer2]) => {
   const _NAME = 'TimelessNFT'
   const _SYMBOL = 'TNT'
   const _ROYALTYFEE = 7
-  const _MAXSUPPLY = 100
   const METADATAURI =
     'https://bafybeidfpvjszubegtoomoknmc7zcqnay7noteadbwxktw46guhdeqohrm.ipfs.infura-ipfs.io/1.json'
 
   const TITLE = 'Soul McCullough'
   const DESCRIPTION =
     'engineer efficient solutions with this NFT, created for Public-key'
+  const SALESPRICE =  web3.utils.toWei('3', 'ether')
 
   let timelessNFT, result
 
@@ -56,17 +56,12 @@ contract('TimelessNFT', ([_deployer, _artist, buyer1, buyer2]) => {
       result = await timelessNFT.royalityFee()
       result.toString().should.equal(_ROYALTYFEE.toString())
     })
-
-    it('confirms NFT max supply', async () => {
-      result = await timelessNFT.maxSupply()
-      result.toString().should.equal(_MAXSUPPLY.toString())
-    })
   })
 
   describe('Minting', () => {
     describe('Success', () => {
       beforeEach(async () => {
-        result = await timelessNFT.payToMint(TITLE, DESCRIPTION, METADATAURI, {
+        result = await timelessNFT.payToMint(TITLE, DESCRIPTION, METADATAURI, SALESPRICE, {
           from: buyer1,
           value: COST,
         })
@@ -91,7 +86,7 @@ contract('TimelessNFT', ([_deployer, _artist, buyer1, buyer2]) => {
     describe('Failure', () => {
       it('Prevents mint with 0 value', async () => {
         await timelessNFT
-          .payToMint(TITLE, DESCRIPTION, METADATAURI, {
+          .payToMint(TITLE, DESCRIPTION, METADATAURI, SALESPRICE, {
             from: buyer1,
             value: 0,
           })
@@ -100,11 +95,29 @@ contract('TimelessNFT', ([_deployer, _artist, buyer1, buyer2]) => {
 
       it('Prevents minting by deployer', async () => {
         await timelessNFT
-          .payToMint(TITLE, DESCRIPTION, METADATAURI, {
+          .payToMint(TITLE, DESCRIPTION, METADATAURI, SALESPRICE, {
             from: _deployer,
             value: COST,
           })
           .should.be.rejectedWith(EVM_REVERT)
+      })
+    })
+  })
+
+  describe('Transfering', () => {
+    describe('Success', () => {
+      beforeEach(async () => {
+        result = await timelessNFT.payToMint(TITLE, DESCRIPTION, METADATAURI, SALESPRICE, {
+          from: buyer1,
+          value: COST,
+        })
+      })
+
+      it('Confirms token transfer', async () => {
+        await timelessNFT.approve(buyer2, 1, { from: buyer1 })
+        await timelessNFT.transferFrom(buyer1, buyer2, 1, { from: buyer2, value: SALESPRICE })
+        result = await timelessNFT.ownerOf(1)
+        result.should.equal(buyer2)
       })
     })
   })
