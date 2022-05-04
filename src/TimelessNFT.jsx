@@ -93,4 +93,18 @@ const buyNFT = async ({ id, cost }) => {
   }
 }
 
-export { loadWeb3, connectWallet, mintNFT, buyNFT }
+const updateNFT = async ({ id, cost }) => {
+  try {
+    cost = window.web3.utils.toWei(cost.toString(), 'ether')
+    const contract = getGlobalState('contract')
+    const buyer = getGlobalState('connectedAccount')
+
+    await contract.methods.changePrice(Number(id), cost).send({ from: buyer })
+
+    return true
+  } catch (error) {
+    setAlert(error.message, 'red')
+  }
+}
+
+export { loadWeb3, connectWallet, mintNFT, buyNFT, updateNFT }

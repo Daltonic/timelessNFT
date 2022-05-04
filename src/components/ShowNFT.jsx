@@ -8,6 +8,12 @@ const ShowNFT = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
   const [nft] = useGlobalState('nft')
 
+  const onChangePrice = () => {
+    setGlobalState('nft', nft)
+    setGlobalState('showModal', 'scale-0')
+    setGlobalState('updateModal', 'scale-100')
+  }
+
   const handleNFTPurchase = () => {
     setGlobalState('showModal', 'scale-0')
     setGlobalState('loading', {
@@ -84,19 +90,31 @@ const ShowNFT = () => {
           </div>
           {connectedAccount != nft?.owner ? (
             <button
-              type="submit"
               className="flex flex-row justify-center items-center
-            w-full text-white text-md bg-[#e32970]
-            hover:bg-[#bd255f] py-2 px-5 rounded-full
-            drop-shadow-xl border border-transparent
-            hover:bg-transparent hover:text-[#e32970]
-            hover:border hover:border-[#bd255f]
-            focus:outline-none focus:ring mt-5"
+              w-full text-white text-md bg-[#e32970]
+              hover:bg-[#bd255f] py-2 px-5 rounded-full
+              drop-shadow-xl border border-transparent
+              hover:bg-transparent hover:text-[#e32970]
+              hover:border hover:border-[#bd255f]
+              focus:outline-none focus:ring mt-5"
               onClick={handleNFTPurchase}
             >
               Purchase Now
             </button>
-          ) : null}
+          ) : (
+            <button
+              className="flex flex-row justify-center items-center
+              w-full text-white text-md bg-[#e32970]
+              hover:bg-[#bd255f] py-2 px-5 rounded-full
+              drop-shadow-xl border border-transparent
+              hover:bg-transparent hover:text-[#e32970]
+              hover:border hover:border-[#bd255f]
+              focus:outline-none focus:ring mt-5"
+              onClick={onChangePrice}
+            >
+              Change Price
+            </button>
+          )}
         </div>
       </div>
     </div>
