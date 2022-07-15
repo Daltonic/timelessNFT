@@ -35,8 +35,9 @@ const Hero = () => {
                 className="text-white border border-gray-500 
               hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
                 rounded-full p-2 mx-3"
+                onClick={() => setGlobalState('chatList', 'scale-100')}
               >
-                List NFTs
+                Recent Chats
               </button>
             </>
           ) : (

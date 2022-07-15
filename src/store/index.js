@@ -8,6 +8,7 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   loading: { show: false, msg: '' },
   showModal: 'scale-0',
   chatInterface: 'scale-0',
+  chatList: 'scale-0',
   connectedAccount: '',
   nft: null,
   nfts: [],

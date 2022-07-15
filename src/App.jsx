@@ -8,6 +8,7 @@ import Loading from './components/Loading'
 import ShowNFT from './components/ShowNFT'
 import Transactions from './components/Transactions'
 import Chat from './components/Chat'
+import ChatList from './components/ChatList'
 import { loadWeb3 } from './TimelessNFT'
 import { useEffect } from 'react'
 import UpdateNFT from './components/UpdateNFT'
@@ -27,6 +28,7 @@ const App = () => {
       <UpdateNFT />
       <ShowNFT />
       <Chat />
+      <ChatList />
       <Footer />
       <Alert />
       <Loading />

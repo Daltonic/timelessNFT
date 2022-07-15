@@ -45,40 +45,54 @@ const Chat = () => {
               <FaTimes />
             </button>
           </div>
-          <div
-            id="messages-container"
-            className="h-[calc(100vh_-_20rem)] overflow-y-auto sm:pr-4 my-3"
-          >
-            {/* Left */}
-            <div className="flex flex-row justify-start items-center mt-5">
-              <div className="flex flex-col justify-start items-center">
-                <h4 className="text-[#e32970]">
-                  @{nft?.owner ? truncate(nft.owner, 4, 4, 11) : '...'}
-                </h4>
-                <p className="text-xs">Chat View</p>
-              </div>
+          {true ? (
+            <div className="flex flex-row justify-center items-center h-[calc(100vh_-_20rem)]">
+              <button
+                className="shadow-xl shadow-black text-white
+              bg-[#e32970] hover:bg-[#bd255f]
+                rounded-full cursor-pointer p-2"
+              >
+                Login to Chat
+              </button>
             </div>
-            {/* Right */}
-            <div className="flex flex-row justify-end items-center mt-5">
-              <div className="flex flex-col justify-start items-center">
-                <h4 className="text-[#e32970]">@you</h4>
-                <p className="text-xs">Chat View</p>
+          ) : (
+            <>
+              <div
+                id="messages-container"
+                className="h-[calc(100vh_-_16rem)] overflow-y-auto sm:pr-4 my-3"
+              >
+                {/* Left */}
+                <div className="flex flex-row justify-start items-center mt-5">
+                  <div className="flex flex-col justify-start items-center">
+                    <h4 className="text-[#e32970]">
+                      @{nft?.owner ? truncate(nft.owner, 4, 4, 11) : '...'}
+                    </h4>
+                    <p className="text-xs">Chat View</p>
+                  </div>
+                </div>
+                {/* Right */}
+                <div className="flex flex-row justify-end items-center mt-5">
+                  <div className="flex flex-col justify-start items-center">
+                    <h4 className="text-[#e32970]">@you</h4>
+                    <p className="text-xs">Chat View</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="flex flex-row justify-between items-center bg-gray-800 rounded-xl mt-5">
-            <textarea
-              className="block w-full text-sm resize-none
-              text-slate-500 bg-transparent border-0
-              focus:outline-none focus:ring-0 h-20"
-              type="text"
-              name="message"
-              placeholder="Write message..."
-              onChange={(e) => setMessage(e.target.value)}
-              value={message}
-              required
-            ></textarea>
-          </div>
+              <div className="flex flex-row justify-between items-center bg-gray-800 rounded-xl mt-5">
+                <textarea
+                  className="block w-full text-sm resize-none
+                text-slate-500 bg-transparent border-0
+                  focus:outline-none focus:ring-0 h-20"
+                  type="text"
+                  name="message"
+                  placeholder="Write message..."
+                  onChange={(e) => setMessage(e.target.value)}
+                  value={message}
+                  required
+                ></textarea>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
