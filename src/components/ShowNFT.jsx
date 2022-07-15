@@ -14,6 +14,12 @@ const ShowNFT = () => {
     setGlobalState('updateModal', 'scale-100')
   }
 
+  const onChatSeller = () => {
+    setGlobalState('nft', nft)
+    setGlobalState('showModal', 'scale-0')
+    setGlobalState('chatInterface', 'scale-100')
+  }
+
   const handleNFTPurchase = () => {
     setGlobalState('showModal', 'scale-0')
     setGlobalState('loading', {
@@ -89,18 +95,31 @@ const ShowNFT = () => {
             </div>
           </div>
           {connectedAccount != nft?.owner ? (
-            <button
-              className="flex flex-row justify-center items-center
-              w-full text-white text-md bg-[#e32970]
-              hover:bg-[#bd255f] py-2 px-5 rounded-full
-              drop-shadow-xl border border-transparent
-              hover:bg-transparent hover:text-[#e32970]
-              hover:border hover:border-[#bd255f]
-              focus:outline-none focus:ring mt-5"
-              onClick={handleNFTPurchase}
-            >
-              Purchase Now
-            </button>
+            <div className="flex flex-row justify-between items-center">
+              <button
+                className="flex flex-row justify-center items-center
+                w-full text-white text-md bg-[#e32970]
+                hover:bg-[#bd255f] py-2 px-5 rounded-full
+                drop-shadow-xl border border-transparent
+                hover:bg-transparent hover:text-[#e32970]
+                hover:border hover:border-[#bd255f]
+                focus:outline-none focus:ring mt-5"
+                onClick={handleNFTPurchase}
+              >
+                Purchase Now
+              </button>
+              <button
+                className="flex flex-row justify-center items-center
+                w-full text-white text-md bg-transparent 
+                py-2 px-5 rounded-full drop-shadow-xl border
+                border-transparent hover:bg-transparent
+                hover:text-[#e32970] focus:outline-none
+                focus:ring mt-5"
+                onClick={onChatSeller}
+              >
+                Chat with Seller
+              </button>
+            </div>
           ) : (
             <button
               className="flex flex-row justify-center items-center
