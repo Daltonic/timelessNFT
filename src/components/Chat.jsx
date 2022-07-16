@@ -1,14 +1,39 @@
 import { useGlobalState, setGlobalState, truncate } from '../store'
+import { loginWithCometChat, signUpWithCometChat } from '../CometChat'
 import { useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 
 const Chat = () => {
   const [modal] = useGlobalState('chatInterface')
   const [nft] = useGlobalState('nft')
+  const [connectedAccount] = useGlobalState('connectedAccount')
   const [message, setMessage] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+  }
+
+  const handleSignUp = () => {
+    signUpWithCometChat(connectedAccount, connectedAccount).then((user) => {
+      if (!!!user.code) {
+        alert('Account created, now click the login button.')
+      } else {
+        alert(JSON.stringify(user.message))
+        console.log(user.message)
+      }
+    })
+  }
+
+  const handleLogin = () => {
+    loginWithCometChat(connectedAccount).then((user) => {
+      if (!!!user.code) {
+        setGlobalState('currentUser', user)
+        closeModal()
+      } else {
+        alert(JSON.stringify(user.message))
+        console.log(user.message)
+      }
+    })
   }
 
   const onClose = () => {
@@ -52,7 +77,7 @@ const Chat = () => {
               bg-[#e32970] hover:bg-[#bd255f]
                 rounded-full cursor-pointer p-2"
               >
-                Login to Chat
+                Enable Chat
               </button>
             </div>
           ) : (

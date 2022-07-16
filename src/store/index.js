@@ -10,6 +10,7 @@ const { setGlobalState, useGlobalState, getGlobalState } = createGlobalState({
   chatInterface: 'scale-0',
   chatList: 'scale-0',
   connectedAccount: '',
+  currentUser: null,
   nft: null,
   nfts: [],
   transactions: [],

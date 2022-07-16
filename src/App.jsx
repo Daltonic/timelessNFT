@@ -9,12 +9,16 @@ import ShowNFT from './components/ShowNFT'
 import Transactions from './components/Transactions'
 import Chat from './components/Chat'
 import ChatList from './components/ChatList'
+import UpdateNFT from './components/UpdateNFT'
+import { isUserLoggedIn } from './CometChat'
 import { loadWeb3 } from './TimelessNFT'
 import { useEffect } from 'react'
-import UpdateNFT from './components/UpdateNFT'
 
 const App = () => {
-  useEffect(() => loadWeb3(), [])
+  useEffect(() => {
+    loadWeb3()
+    isUserLoggedIn()
+  }, [])
 
   return (
     <div className="min-h-screen">

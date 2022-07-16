@@ -1,8 +1,16 @@
-import { setGlobalState, useGlobalState, truncate } from '../store'
 import Identicon from 'react-identicons'
+import { setGlobalState, useGlobalState, truncate } from '../store'
+import { loginWithCometChat } from '../CometChat'
+import { useEffect, useState } from 'react'
 
 const Hero = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
+  const [currentUser] = useGlobalState('currentUser')
+  const [authed, setAuthed] = useState(false)
+
+  useEffect(() => {
+    setAuthed(currentUser?.uid.toLowerCase() == connectedAccount.toLowerCase())
+  }, [currentUser])
 
   return (
     <div
@@ -31,14 +39,25 @@ const Hero = () => {
               >
                 Create NFT
               </button>
-              <button
-                className="text-white border border-gray-500 
-              hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
-                rounded-full p-2 mx-3"
-                onClick={() => setGlobalState('chatList', 'scale-100')}
-              >
-                Recent Chats
-              </button>
+              {!authed ? (
+                <button
+                  className="text-white border border-gray-500 
+                hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
+                  rounded-full p-2 mx-3"
+                  onClick={() => loginWithCometChat(connectedAccount)}
+                >
+                  Enable Chat
+                </button>
+              ) : (
+                <button
+                  className="text-white border border-gray-500 
+                hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
+                  rounded-full p-2 mx-3"
+                  onClick={() => setGlobalState('chatList', 'scale-100')}
+                >
+                  Recent Chats
+                </button>
+              )}
             </>
           ) : (
             <></>
@@ -78,7 +97,9 @@ const Hero = () => {
           />
           <div>
             <p className="text-white font-semibold">
-              {connectedAccount ? truncate(connectedAccount, 4, 4, 11) : 'Connect Your Wallet'}
+              {connectedAccount
+                ? truncate(connectedAccount, 4, 4, 11)
+                : 'Connect Your Wallet'}
             </p>
             <small className="text-pink-800 font-bold">@you</small>
           </div>

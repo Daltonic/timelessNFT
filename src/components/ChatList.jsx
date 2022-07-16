@@ -1,13 +1,15 @@
+// import { useEffect } from 'react'
 import { useGlobalState, setGlobalState } from '../store'
-import { useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 
 const ChatList = () => {
   const [modal] = useGlobalState('chatList')
+  const [currentUser] = useGlobalState('currentUser')
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-  }
+  // useEffect(() => {
+  //   console.log('Chat List', currentUser)
+  // }, [currentUser])
+  
 
   return (
     <div
@@ -30,22 +32,20 @@ const ChatList = () => {
 
           <div className="h-[calc(100vh_-_20rem)] overflow-y-auto sm:pr-4 my-3">
             {/* Chat Start */}
-            {Array(10)
-              .fill()
-              .map((i) => (
-                <div className="flex flex-row justify-between 
+            <div
+              className="flex flex-row justify-between 
                   items-center bg-gray-800 hover:bg-gray-900 rounded-md 
                   px-4 py-3 my-1 cursor-pointer transform
-                  transition-transform duration-300">
-                  <div className="flex flex-col">
-                    <h4 className="text-sm text-[#e32970] font-semiBold">
-                      @0xf1e...f20e
-                    </h4>
-                    <p className="text-xs">Lorem ipsum dalum...</p>
-                  </div>
-                  <p className="text-xs font-bold">12/07/22 12:05pm</p>
-                </div>
-              ))}
+                  transition-transform duration-300"
+            >
+              <div className="flex flex-col">
+                <h4 className="text-sm text-[#e32970] font-semiBold">
+                  @0xf1e...f20e
+                </h4>
+                <p className="text-xs">Lorem ipsum dalum...</p>
+              </div>
+              <p className="text-xs font-bold">12/07/22 12:05pm</p>
+            </div>
           </div>
         </div>
       </div>

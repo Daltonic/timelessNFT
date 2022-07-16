@@ -9,6 +9,7 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@cometchat-pro/chat": "^3.0.9",
     "ipfs-http-client": "^56.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
