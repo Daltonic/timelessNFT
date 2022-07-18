@@ -1,16 +1,27 @@
 import Identicon from 'react-identicons'
 import { setGlobalState, useGlobalState, truncate } from '../store'
-import { loginWithCometChat } from '../CometChat'
+import { getConversations, loginWithCometChat } from '../CometChat'
+import ChatList from './ChatList'
+import { useState } from 'react'
 
 const Hero = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
   const [currentUser] = useGlobalState('currentUser')
+  const [recentOpened] = useGlobalState('recentOpened')
+  const [conversations, setConversations] = useState([])
 
   const onCreatedNFT = () => {
     if (currentUser?.uid.toLowerCase() != connectedAccount.toLowerCase())
       return alert('Please login to receive chats from buyers!')
 
     setGlobalState('modal', 'scale-100')
+  }
+
+  const onLunchRecent = () => {
+    getConversations().then((convs) => {
+      setConversations(convs)
+      setGlobalState('recentOpened', true)
+    })
   }
 
   return (
@@ -47,7 +58,7 @@ const Hero = () => {
                     className="text-white border border-gray-500 
                     hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
                     rounded-full p-2 mx-3"
-                    onClick={() => setGlobalState('chatList', 'scale-100')}
+                    onClick={onLunchRecent}
                   >
                     Recent Chats
                   </button>
@@ -107,6 +118,8 @@ const Hero = () => {
           </div>
         </div>
       </div>
+
+      {recentOpened ? <ChatList users={conversations} /> : null}
     </div>
   )
 }

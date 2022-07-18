@@ -7,18 +7,12 @@ import Hero from './components/Hero'
 import Loading from './components/Loading'
 import ShowNFT from './components/ShowNFT'
 import Transactions from './components/Transactions'
-import Chat from './components/Chat'
-import ChatList from './components/ChatList'
 import UpdateNFT from './components/UpdateNFT'
 import { isUserLoggedIn } from './CometChat'
 import { loadWeb3 } from './TimelessNFT'
 import { useEffect } from 'react'
-import { useGlobalState } from './store'
 
 const App = () => {
-  const [currentUser] = useGlobalState('currentUser')
-  const [connectedAccount] = useGlobalState('connectedAccount')
-
   useEffect(() => {
     loadWeb3()
     isUserLoggedIn()
@@ -35,11 +29,6 @@ const App = () => {
       <CreateNFT />
       <UpdateNFT />
       <ShowNFT />
-      {currentUser?.uid.toLowerCase() == connectedAccount.toLowerCase() ? (
-        <>
-          <ChatList />
-        </>
-      ) : null}
       <Footer />
       <Alert />
       <Loading />

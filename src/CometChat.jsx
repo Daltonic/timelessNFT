@@ -26,8 +26,7 @@ const loginWithCometChat = async (UID) => {
   await CometChat.login(UID, authKey)
     .then((user) => setGlobalState('currentUser', user))
     .catch((error) => {
-      if(error.code == 'ERR_UID_NOT_FOUND')
-        signUpWithCometChat(UID, UID)
+      if (error.code == 'ERR_UID_NOT_FOUND') signUpWithCometChat(UID, UID)
     })
   return true
 }
@@ -85,6 +84,17 @@ const sendMessage = async (receiverID, messageText) => {
     .catch((error) => error)
 }
 
+const getConversations = async () => {
+  const limit = 30
+  const conversationsRequest = new CometChat.ConversationsRequestBuilder()
+    .setLimit(limit)
+    .build()
+
+  return await conversationsRequest
+    .fetchNext()
+    .then((conversationList) => conversationList)
+}
+
 export {
   initCometChat,
   loginWithCometChat,
@@ -92,6 +102,7 @@ export {
   logOutWithCometChat,
   getMessages,
   sendMessage,
+  getConversations,
   isUserLoggedIn,
-  CometChat
+  CometChat,
 }
