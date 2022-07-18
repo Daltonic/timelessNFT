@@ -1,16 +1,17 @@
 import Identicon from 'react-identicons'
 import { setGlobalState, useGlobalState, truncate } from '../store'
 import { loginWithCometChat } from '../CometChat'
-import { useEffect, useState } from 'react'
 
 const Hero = () => {
   const [connectedAccount] = useGlobalState('connectedAccount')
   const [currentUser] = useGlobalState('currentUser')
-  const [authed, setAuthed] = useState(false)
 
-  useEffect(() => {
-    setAuthed(currentUser?.uid.toLowerCase() == connectedAccount.toLowerCase())
-  }, [currentUser])
+  const onCreatedNFT = () => {
+    if (currentUser?.uid.toLowerCase() != connectedAccount.toLowerCase())
+      return alert('Please login to receive chats from buyers!')
+
+    setGlobalState('modal', 'scale-100')
+  }
 
   return (
     <div
@@ -32,36 +33,37 @@ const Hero = () => {
           {connectedAccount ? (
             <>
               <button
-                onClick={() => setGlobalState('modal', 'scale-100')}
                 className="shadow-xl shadow-black text-white
-              bg-[#e32970] hover:bg-[#bd255f]
+                bg-[#e32970] hover:bg-[#bd255f]
                 rounded-full cursor-pointer p-2"
+                onClick={onCreatedNFT}
               >
                 Create NFT
               </button>
-              {!authed ? (
-                <button
-                  className="text-white border border-gray-500 
-                hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
-                  rounded-full p-2 mx-3"
-                  onClick={() => loginWithCometChat(connectedAccount)}
-                >
-                  Enable Chat
-                </button>
-              ) : (
-                <button
-                  className="text-white border border-gray-500 
-                hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
-                  rounded-full p-2 mx-3"
-                  onClick={() => setGlobalState('chatList', 'scale-100')}
-                >
-                  Recent Chats
-                </button>
-              )}
+              <>
+                {currentUser?.uid.toLowerCase() ==
+                connectedAccount.toLowerCase() ? (
+                  <button
+                    className="text-white border border-gray-500 
+                    hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
+                    rounded-full p-2 mx-3"
+                    onClick={() => setGlobalState('chatList', 'scale-100')}
+                  >
+                    Recent Chats
+                  </button>
+                ) : (
+                  <button
+                    className="text-white border border-gray-500 
+                    hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
+                    rounded-full p-2 mx-3"
+                    onClick={() => loginWithCometChat(connectedAccount)}
+                  >
+                    Chat Login
+                  </button>
+                )}
+              </>
             </>
-          ) : (
-            <></>
-          )}
+          ) : null}
         </div>
 
         <div className="w-3/4 flex justify-between items-center mt-5">

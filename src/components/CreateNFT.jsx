@@ -32,6 +32,7 @@ const CreateNFT = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
     if (!title || !price || !description) return
 
     setGlobalState('modal', 'scale-0')

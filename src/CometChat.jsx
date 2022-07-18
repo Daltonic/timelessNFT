@@ -28,9 +28,8 @@ const loginWithCometChat = async (UID) => {
     .catch((error) => {
       if(error.code == 'ERR_UID_NOT_FOUND')
         signUpWithCometChat(UID, UID)
-
-      console.log(error)
     })
+  return true
 }
 
 const signUpWithCometChat = async (UID, name) => {
@@ -39,8 +38,13 @@ const signUpWithCometChat = async (UID, name) => {
   user.setName(name)
 
   await CometChat.createUser(user, authKey)
-    .then((user) => loginWithCometChat(user.uid))
+    .then((user) => {
+      console.log('Signed Up, logging in: ', user)
+      setGlobalState('currentUser', user)
+      loginWithCometChat(user.uid)
+    })
     .catch((error) => console.log(error))
+  return true
 }
 
 const logOutWithCometChat = async () => {
@@ -55,35 +59,10 @@ const isUserLoggedIn = async () => {
     .catch((error) => console.log('error:', error))
 }
 
-const createNewGroup = async (GUID, groupName) => {
-  const groupType = CometChat.GROUP_TYPE.PUBLIC
-  const password = ''
-  const group = new CometChat.Group(GUID, groupName, groupType, password)
-
-  return await CometChat.createGroup(group)
-    .then((group) => group)
-    .catch((error) => error)
-}
-
-const getGroup = async (GUID) => {
-  return await CometChat.getGroup(GUID)
-    .then((group) => group)
-    .catch((error) => error)
-}
-
-const joinGroup = async (GUID) => {
-  const groupType = CometChat.GROUP_TYPE.PUBLIC
-  const password = ''
-
-  return CometChat.joinGroup(GUID, groupType, password)
-    .then((group) => group)
-    .catch((error) => error)
-}
-
 const getMessages = async (UID) => {
   const limit = 30
   const messagesRequest = new CometChat.MessagesRequestBuilder()
-    .setGUID(UID)
+    .setUID(UID)
     .setLimit(limit)
     .build()
 
@@ -94,7 +73,7 @@ const getMessages = async (UID) => {
 }
 
 const sendMessage = async (receiverID, messageText) => {
-  const receiverType = CometChat.RECEIVER_TYPE.GROUP
+  const receiverType = CometChat.RECEIVER_TYPE.USER
   const textMessage = new CometChat.TextMessage(
     receiverID,
     messageText,
@@ -114,8 +93,5 @@ export {
   getMessages,
   sendMessage,
   isUserLoggedIn,
-  createNewGroup,
-  getGroup,
-  joinGroup,
   CometChat
 }

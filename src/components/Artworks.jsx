@@ -40,7 +40,7 @@ const Artworks = () => {
                   onClick={() => setNFT(nft)}
                   className="shadow-lg shadow-black text-white text-sm bg-[#e32970] hover:bg-[#bd255f] cursor-pointer rounded-full px-1.5 py-1"
                 >
-                  Buy NFT
+                  View Details
                 </button>
               </div>
             </div>
