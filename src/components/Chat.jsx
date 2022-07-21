@@ -1,16 +1,17 @@
+import Identicon from 'react-identicons'
 import { useGlobalState, setGlobalState, truncate } from '../store'
 import { sendMessage, CometChat } from '../CometChat'
 import { useEffect, useState } from 'react'
 import { FaTimes } from 'react-icons/fa'
 
-const Chat = ({ nft, chats }) => {
+const Chat = ({ receiver, chats }) => {
   const [connectedAccount] = useGlobalState('connectedAccount')
   const [message, setMessage] = useState('')
   const [messages, setMessages] = useState(chats)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    sendMessage(nft.owner, message).then((msg) => {
+    sendMessage(receiver, message).then((msg) => {
       setMessages((prevState) => [...prevState, msg])
       setMessage('')
       scrollToEnd()
@@ -31,7 +32,7 @@ const Chat = ({ nft, chats }) => {
 
   const onClose = () => {
     setGlobalState('chatOpened', false)
-    setGlobalState('showModal', 'scale-100')
+    setGlobalState('recentChatOpened', false)
   }
 
   const scrollToEnd = () => {
@@ -40,8 +41,8 @@ const Chat = ({ nft, chats }) => {
   }
 
   useEffect(() => {
-    listenForMessage(nft.owner)
-  }, [nft.owner])
+    listenForMessage(receiver)
+  }, [receiver])
 
   return (
     <div
@@ -54,13 +55,13 @@ const Chat = ({ nft, chats }) => {
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row justify-center items-center">
               <div className="shrink-0 rounded-full overflow-hidden h-10 w-10 mr-3">
-                <img
-                  className="h-full w-full object-cover cursor-pointer"
-                  src={nft.metadataURI}
-                  alt={nft.owner}
+                <Identicon
+                  string={receiver.toLowerCase()}
+                  size={50}
+                  className="h-full w-full object-cover cursor-pointer rounded-full"
                 />
               </div>
-              <p className="font-bold">{nft.title}</p>
+              <p className="font-bold">@{receiver ? truncate(receiver, 4, 4, 11) : '...'}</p>
             </div>
             <button
               type="button"
@@ -83,7 +84,7 @@ const Chat = ({ nft, chats }) => {
                 >
                   <div className="flex flex-col justify-start items-start">
                     <h4 className="text-[#e32970]">
-                      @{nft?.owner ? truncate(nft.owner, 4, 4, 11) : '...'}
+                      @{receiver ? truncate(receiver, 4, 4, 11) : '...'}
                     </h4>
                     <p className="text-xs">{msg.text}</p>
                   </div>

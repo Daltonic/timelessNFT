@@ -1,6 +1,6 @@
 import Identicon from 'react-identicons'
 import { setGlobalState, useGlobalState, truncate } from '../store'
-import { getConversations, loginWithCometChat } from '../CometChat'
+import { getConversations, loginWithCometChat, signUpWithCometChat } from '../CometChat'
 import ChatList from './ChatList'
 import { useState } from 'react'
 
@@ -63,14 +63,24 @@ const Hero = () => {
                     Recent Chats
                   </button>
                 ) : (
-                  <button
-                    className="text-white border border-gray-500 
+                  <>
+                    <button
+                      className="text-white border border-gray-500 
                     hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
                     rounded-full p-2 mx-3"
-                    onClick={() => loginWithCometChat(connectedAccount)}
-                  >
-                    Chat Login
-                  </button>
+                      onClick={() => loginWithCometChat(connectedAccount)}
+                    >
+                      Login for Chat
+                    </button>
+                    <button
+                      className="text-white border border-gray-500 
+                    hover:border-[#e32970] hover:bg-[#bd255f] cursor-pointer 
+                    rounded-full p-2 mx-3"
+                      onClick={() => signUpWithCometChat(connectedAccount, connectedAccount)}
+                    >
+                      Signup for Chat
+                    </button>
+                  </>
                 )}
               </>
             </>
@@ -104,7 +114,11 @@ const Hero = () => {
         />
         <div className="flex justify-start items-center p-3">
           <Identicon
-            string={connectedAccount ? connectedAccount : 'Connect Your Wallet'}
+            string={
+              connectedAccount
+                ? connectedAccount.toLowerCase()
+                : 'Connect Your Wallet'
+            }
             size={50}
             className="h-10 w-10 object-contain rounded-full mr-3"
           />

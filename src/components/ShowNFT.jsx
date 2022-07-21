@@ -38,7 +38,6 @@ const ShowNFT = () => {
         })
       )
       setGlobalState('nft', nft)
-      setGlobalState('showModal', 'scale-0')
       setGlobalState('chatOpened', true)
     })
   }
@@ -66,7 +65,7 @@ const ShowNFT = () => {
   return (
     <div>
       {chatOpened ? (
-        <Chat nft={nft} chats={messages} />
+        <Chat receiver={nft.owner} chats={messages} />
       ) : (
         <div
           className={`fixed top-0 left-0 w-screen h-screen flex items-center
@@ -103,7 +102,7 @@ const ShowNFT = () => {
                 <div className="flex justify-between items-center mt-3 text-white">
                   <div className="flex justify-start items-center">
                     <Identicon
-                      string={nft?.owner}
+                      string={nft?.owner.toLowerCase()}
                       size={50}
                       className="h-10 w-10 object-contain rounded-full mr-3"
                     />

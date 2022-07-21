@@ -26,7 +26,8 @@ const loginWithCometChat = async (UID) => {
   await CometChat.login(UID, authKey)
     .then((user) => setGlobalState('currentUser', user))
     .catch((error) => {
-      if (error.code == 'ERR_UID_NOT_FOUND') signUpWithCometChat(UID, UID)
+      alert(error.message)
+      console.log(error)
     })
   return true
 }
@@ -38,11 +39,13 @@ const signUpWithCometChat = async (UID, name) => {
 
   await CometChat.createUser(user, authKey)
     .then((user) => {
-      console.log('Signed Up, logging in: ', user)
-      setGlobalState('currentUser', user)
-      loginWithCometChat(user.uid)
+      alert('Signed up successfully, click login now!')
+      console.log('Logged In: ', user)
     })
-    .catch((error) => console.log(error))
+    .catch((error) => {
+      alert(error.message)
+      console.log(error)
+    })
   return true
 }
 
