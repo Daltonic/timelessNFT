@@ -1,36 +1,69 @@
+# How to Build a Better NFT Marketplace with React, Solidity, and CometChat
 
-# Truffle-Tailwind-React Web3 Starter Kit
-Speedily develope your decentralized application with this starter kit for free!
+Read the full tutorial here: [**>> How to Build a Better NFT Marketplace with React, Solidity, and CometChat**](https://daltonic.github.io)
 
-Follow the steps below to download, install, and run this project.
+This example shows How to Build a Better NFT Marketplace with React, Solidity, and CometChat:
 
-## Dependencies
-Install these prerequisites to follow along with the tutorial. See free video tutorial or a full explanation of each prerequisite.
-- NPM: https://nodejs.org
-- Truffle: https://github.com/trufflesuite/truffle
-- Ganache-CLI: https://docs.nethereum.com/en/latest/ethereum-and-clients/ganache-cli/
-- Tailwind CSS: https://tailwindcss.com/
+![TimelessNFT Project](./screenshots/0.gif)
+<center><figcaption>TimelessNFT Project</figcaption></center>
 
+## Technology
 
-## Step 1. Clone the project
-`git clone https://github.com/Daltonic/tailwind_truffle_starter_kit <PROJECT NAME>`
+This demo uses:
 
-## Step 2. Install dependencies
-```sh
-$ cd <PROJECT NAME>
-$ yarn install # or npm install
-```
-## Step 3. Start Ganache-CLI
-Open the terminal and run the command below.
-```sh
-$ ganache-cli
-```
+- Metamask
+- Truffle
+- Infuria
+- ReactJs
+- Tailwind CSS
+- Ganache-CLI
+- Solidity
+- Web3js
+- Faucet
 
-## Step 4. Compile & Deploy Smart Contract
-`$ truffle migrate --reset`
-Migrate your smart contract each time your restart ganache.
+## Running the demo
 
-## Step 5. Run the Front End Application
-`$ yarn start`
-Visit this URL in your browser: http://localhost:3000
+To run the demo follow these steps:
 
+1. Clone the project with the code below.
+    ```sh
+
+    # Make sure you have the above prerequisites installed already!
+    git clone https://github.com/Daltonic/timelessNFT PROVIDER_NAME
+    cd PROVIDER_NAME # Navigate to the new folder.
+    yarn install # Installs all the dependencies.
+    ```
+2. Create an Infuria project, copy and paste your key in the spaces below.
+3. Update the `.env` file with the following details.
+    ```sh
+    ENDPOINT_URL=<PROVIDER_URL>
+    SECRET_KEY=<SECRET_PHRASE>
+    DEPLOYER_KEY=<YOUR_PRIVATE_KEY>
+    ```
+2. Create a CometChat project, copy and paste your key in the spaces below.
+3. Update the `.env` file with the following details.
+    ```sh
+    REACT_APP_COMET_CHAT_REGION=<REGION>
+    REACT_APP_COMET_CHAT_APP_ID=<APP_ID>
+    REACT_APP_COMET_CHAT_AUTH_KEY=<AUTH_KEY>
+    ```
+3. Run the app using `yarn start`
+<br/>
+
+If your confuse about the installation, check out this **TUTORIAL** to see how you should run it.
+
+Questions about running the demo? [Open an issue](https://github.com/Daltonic/timelessNFT/issues). We're here to help ✌️
+
+## Useful links
+
+- 🏠 [Website](https://daltonic.github.io/)
+- ⚽ [Metamask](https://metamask.io/)
+- 🚀 [Remix Editor](https://remix.ethereum.org/)
+- 💡 [Truffle](https://trufflesuite.com/)
+- 📈 [Infuria](https://infura.io/)
+- 🔥 [ReactJs](https://reactjs.org/)
+- 🐻 [Solidity](https://soliditylang.org/)
+- 👀 [Web3Js](https://docs.ethers.io/v5/)
+- 🎅 [Faucet](https://faucets.chain.link/rinkeby)
+- 🤖 [Ganache](https://trufflesuite.com/ganache/index.html)
+- ✨ [Live Demo](https://timelessnft-33dea.web.app/)
