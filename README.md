@@ -13,7 +13,7 @@ This demo uses:
 
 - Metamask
 - Truffle
-- Infuria
+- Infura
 - ReactJs
 - Tailwind CSS
 - Ganache-CLI
