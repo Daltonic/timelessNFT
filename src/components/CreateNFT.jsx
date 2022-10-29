@@ -51,6 +51,7 @@ const CreateNFT = () => {
 
       resetForm()
       setAlert('Minting completed...', 'green')
+      window.location.reload()
     } catch (error) {
       console.log('Error uploading file: ', error)
       setAlert('Minting failed...', 'red')
