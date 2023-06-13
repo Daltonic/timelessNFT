@@ -36,9 +36,8 @@ To run the demo follow these steps:
 2. Create an Infuria project, copy and paste your key in the spaces below.
 3. Update the `.env` file with the following details.
     ```sh
-    ENDPOINT_URL=<PROVIDER_URL>
-    SECRET_KEY=<SECRET_PHRASE>
-    DEPLOYER_KEY=<YOUR_PRIVATE_KEY>
+    REACT_APP_INFURIA_PID=<INFURIA_API_KEY_HERE>
+    REACT_APP_INFURIA_API=<INFURIA_API_KEY_SECRET_HERE>
     ```
 2. Create a CometChat project, copy and paste your key in the spaces below.
 3. Run the app using `yarn start`
