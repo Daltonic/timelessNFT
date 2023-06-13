@@ -55,7 +55,6 @@ contract TimelessNFT is ERC721Enumerable, Ownable {
     ) external payable {
         require(msg.value >= cost, "Ether too low for minting!");
         require(existingURIs[metadataURI] == 0, "This NFT is already minted!");
-        require(msg.sender != owner(), "Sales not allowed!");
         
 
         uint256 royality = (msg.value * royalityFee) / 100;
