@@ -33,15 +33,17 @@ To run the demo follow these steps:
     cd PROVIDER_NAME # Navigate to the new folder.
     yarn install # Installs all the dependencies.
     ```
-2. Create an Infuria project, copy and paste your key in the spaces below.
-3. Update the `.env` file with the following details.
+2. Ensure that you have Truffle and Ganache installed    
+3. Create an Infuria project, copy and paste your key in the spaces below.
+4. Update the `.env` file with the following details.
     ```sh
-    ENDPOINT_URL=<PROVIDER_URL>
-    SECRET_KEY=<SECRET_PHRASE>
-    DEPLOYER_KEY=<YOUR_PRIVATE_KEY>
+    REACT_APP_INFURIA_PID=<Infuria_project_id>
+    REACT_APP_INFURIA_API=<Infuria_api_key>
     ```
-2. Create a CometChat project, copy and paste your key in the spaces below.
-3. Run the app using `yarn start`
+5. Install the dependencies using `yarn install`
+6. Spin up ganache server using `ganache -d`
+7. Deploy the conttract to the network using `truffle migrate`
+8. Run the app using `yarn start`
 <br/>
 
 If your confuse about the installation, check out this **TUTORIAL** to see how you should run it.
